@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: obs-control-conexion
+    runtime: docker
+    plan: free
+    healthCheckPath: /capabilities
+    envVars:
+      - key: PUBLIC_URL
+        sync: false
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: META_API_VERSION
+        value: v26.0
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
