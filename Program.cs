@@ -7,6 +7,7 @@ builder.WebHost.UseUrls("http://0.0.0.0:"+(Environment.GetEnvironmentVariable("P
 builder.Services.AddRateLimiter(o=>{o.RejectionStatusCode=429;o.GlobalLimiter=PartitionedRateLimiter.Create<HttpContext,string>(c=>RateLimitPartition.GetFixedWindowLimiter(c.Connection.RemoteIpAddress?.ToString()??"unknown",_=>new(){PermitLimit=300,Window=TimeSpan.FromMinutes(1),QueueLimit=0}));});
 var app=builder.Build();app.UseRateLimiter();var store=new SessionStore();
 var publicUrl=Environment.GetEnvironmentVariable("PUBLIC_URL")??"";
+if(string.IsNullOrWhiteSpace(publicUrl))publicUrl=Environment.GetEnvironmentVariable("RENDER_EXTERNAL_URL")??"";
 if(!Uri.TryCreate(publicUrl,UriKind.Absolute,out var publicUri)||publicUri.Scheme!="https"||publicUri.AbsolutePath!="/"||publicUri.Query.Length>0||publicUri.Fragment.Length>0||publicUri.UserInfo.Length>0)throw new Exception("PUBLIC_URL debe ser el origen HTTPS del alojamiento");
 publicUrl=publicUrl.TrimEnd('/');
 string Env(string key)=>Environment.GetEnvironmentVariable(key)??"";
